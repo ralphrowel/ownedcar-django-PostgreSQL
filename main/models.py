@@ -3,6 +3,7 @@ from django.db import models
 class User(models.Model):
     user_firstname = models.CharField(max_length=200)
     user_lastname = models.CharField(max_length=200)
+    cars = models.ManyToManyField('Car', related_name='shared_with_users', blank=True)
 
     def __str__(self):
         return f"{self.user_firstname} {self.user_lastname}"
@@ -18,7 +19,7 @@ class Car(models.Model):
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="cars",
+        related_name="owned_cars",
         null=True,
         blank=True,
         help_text="The primary owner of this car.",
