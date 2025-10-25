@@ -51,3 +51,9 @@ class CarOwnership(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.car} ({self.ownership_type})"
+    
+class PurchaseInfo(models.Model):
+    car = models.OneToOneField(Car, on_delete=models.CASCADE)
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE)
+    purchase_date = models.DateField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)

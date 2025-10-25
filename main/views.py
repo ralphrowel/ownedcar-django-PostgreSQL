@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import User, Car, CarOwnership
 from .serializers import UserSerializer, CarSerializer, CarOwnershipSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -47,3 +48,13 @@ class CarViewSet(viewsets.ModelViewSet):
         ownerships = CarOwnership.objects.filter(car=car)
         serializer = CarOwnershipSerializer(ownerships, many=True)
         return Response(serializer.data)
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+class CarViewSet(viewsets.ModelViewSet):
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
+    permission_classes = [AllowAny]
