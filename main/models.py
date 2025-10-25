@@ -1,11 +1,19 @@
 from django.db import models
 
+
 class User(models.Model):
+    ROLE_CHOICES = [
+        ("admin", "Admin"),
+        ("dealer", "Dealer"),
+        ("user", "Regular User"),
+    ]
+
     user_firstname = models.CharField(max_length=200)
     user_lastname = models.CharField(max_length=200)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="user")
 
     def __str__(self):
-        return f"{self.user_firstname} {self.user_lastname}"
+        return f"{self.user_firstname} {self.user_lastname} ({self.role})"
 
 
 class Car(models.Model):
@@ -21,7 +29,6 @@ class Car(models.Model):
     car_color = models.CharField(max_length=20, choices=COLORS, default="black")
     car_platenumber = models.IntegerField(unique=True, null=True, blank=True, default=0)
 
-    # A car can have multiple owners (shared), and each ownership has details
     owners = models.ManyToManyField(
         User,
         through='CarOwnership',
@@ -51,7 +58,8 @@ class CarOwnership(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.car} ({self.ownership_type})"
-    
+
+
 class PurchaseInfo(models.Model):
     car = models.OneToOneField(Car, on_delete=models.CASCADE)
     buyer = models.ForeignKey(User, on_delete=models.CASCADE)
